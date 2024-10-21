@@ -7,12 +7,12 @@ FROM postgres:17-alpine AS base
 RUN apk --no-cache add ca-certificates fuse3 tzdata && \
   echo "user_allow_other" >> /etc/fuse.conf
 
-COPY --from=provider /usr/local/bin/rclone /usr/local/bin/
+COPY --from=provider /usr/local/bin/rclone /usr/bin/
 
-RUN find /usr/local/bin -type f -name 'pg_*' ! -name 'pg_dump' ! -name 'pg_restore' -exec rm -f {} + \
-    && rm -f /usr/local/bin/postgres /usr/local/bin/psql
-
-RUN ls -l /usr/local/bin/pg_*
+RUN cp /usr/local/bin/pg_dump /usr/bin/pg_dump && \
+    cp /usr/local/bin/pg_restore /usr/bin/pg_restore
+    
+RUN rm -rf /usr/local/bin
 
 RUN addgroup -g 1009 rclone && adduser -u 1009 -Ds /bin/sh -G rclone rclone
 
