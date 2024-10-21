@@ -9,7 +9,8 @@ RUN apk --no-cache add ca-certificates fuse3 tzdata && \
 
 COPY --from=provider /usr/local/bin/rclone /usr/local/bin/
 
-RUN find /usr/local/bin -type f -name 'pg_*' ! -name 'pg_dump' ! -name 'pg_restore' -exec rm -f {} +
+RUN find /usr/local/bin -type f -name 'pg_*' ! -name 'pg_dump' ! -name 'pg_restore' -exec rm -f {} + \
+    && rm -f /usr/local/bin/postgres /usr/local/bin/psql
 
 RUN ls -l /usr/local/bin/pg_*
 
